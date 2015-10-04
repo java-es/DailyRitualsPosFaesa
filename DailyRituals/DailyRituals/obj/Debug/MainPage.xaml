@@ -1,0 +1,60 @@
+﻿<Page
+x:Class="DailyRituals.MainPage"
+xmlns:valueconverter="using:DailyRituals.ValueConverters"
+xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:local="using:DailyRituals"
+xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+mc:Ignorable="d"
+Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+<Page.Resources>
+    <valueconverter:IsCompleteToBoolean x:Key="IsCompleteToBoolean"/>
+    <valueconverter:CompletedDatesToIntegerConverter x:Key="CompletedDatesToIntegerConverter"/>
+</Page.Resources>
+<Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton x:ConnectionId='1' 
+                Icon="Add" 
+                Label="Add Ritual" 
+                Name="AddRitual"
+                                       />
+        </CommandBar>
+    </Page.BottomAppBar>
+<ScrollViewer>
+    <Grid>
+    <Grid.RowDefinitions>
+    <RowDefinition Height="100" />
+    <RowDefinition Height="50" />
+    <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <TextBlock Grid.Row="0" Style="{StaticResource TitleTextBlockStyle}" FontSize="36" Margin="20,60,20,0">Daily Rituals</TextBlock>
+    <TextBlock Grid.Row="1" Style="{StaticResource TitleTextBlockStyle}" Margin="20,20,20,0">Track the progress of your goals for 30 days</TextBlock>
+    <Grid Grid.Row="2" Margin="20,20,20,0" >
+    <Grid.Resources>
+    <DataTemplate x:Name="dataTemplate">
+    <StackPanel Orientation="Vertical">
+    <TextBlock Text="{Binding Name}"
+    FontSize="24"></TextBlock>
+    <TextBlock Text="{Binding Description}"
+    FontSize="18"></TextBlock>
+    <Button Name="CompletedButton"
+    Content="I Did this Today!"
+    Command="{Binding CompletedCommand}"
+    CommandParameter="{Binding}"
+    IsEnabled="{Binding Dates,Converter={StaticResource IsCompleteToBoolean}}"
+    />
+    <ProgressBar Value="{Binding Dates,Converter={StaticResource CompletedDatesToIntegerConverter}}"
+    Maximum="30"
+    Minimum="0" />
+    </StackPanel>
+    </DataTemplate>
+    </Grid.Resources>
+    <ItemsControl x:Name="itemsControl"
+    ItemsSource="{Binding}"
+    ItemTemplate="{StaticResource dataTemplate}"/>
+    </Grid>
+    </Grid>
+</ScrollViewer>
+</Page>
+
